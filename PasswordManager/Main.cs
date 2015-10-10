@@ -9,6 +9,7 @@ namespace PasswordManager
         private static Size MinSize = new Size(290, 200);
 
         MattyUserControl[] userControls;
+        public int GoToControl;
 
         public Main() {
             // Load and apply the settings
@@ -23,7 +24,8 @@ namespace PasswordManager
             this.MaximizeBox = false;
 
             // Add the controls
-            this.userControls = new MattyUserControl[] { new PasswordListControl(), new PasswordControl(), new SettingsControl() };
+            PasswordControl accountControl = new PasswordControl();
+            this.userControls = new MattyUserControl[] { new PasswordListControl(accountControl), accountControl, new SettingsControl() };
             foreach (MattyUserControl u in this.userControls) {
                 u.Size = this.ClientSize;
                 this.Controls.Add(u);
@@ -67,11 +69,17 @@ namespace PasswordManager
 
     class MattyUserControl : UserControl
     {
+        public int GoToControl {
+            get { return ((Main)this.Parent).GoToControl; }
+            set { ((Main)this.Parent).GoToControl = value; }
+        }
+
         /// <summary>
         /// Show usercontrol at index i and hide all others
         /// </summary>
         /// <param name="i">The index</param>
         public void ShowUserControl(int i) {
+            this.GoToControl = -1;
             ((Main)this.Parent).ShowUserControl(i);
         }
 

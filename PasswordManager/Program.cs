@@ -10,6 +10,9 @@ namespace PasswordManager
         /// </summary>
         [STAThread]
         static void Main(string[] args) {
+            // Load the settigns
+            Settings.Get.Load();
+
             // Simple things can be done from the command line
             // Todo
 
@@ -17,6 +20,9 @@ namespace PasswordManager
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Main());
+
+            // Save the settings
+            Settings.Get.Save();
         }
     }
 }

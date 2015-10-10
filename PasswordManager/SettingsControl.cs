@@ -17,11 +17,11 @@ namespace PasswordManager
             // Add buttons
             this.btnResetDefaults = new Btn("Reset defaults", this);
             this.btnResetDefaults.Size = new Size(this.btnResetDefaults.Width + 25, this.btnResetDefaults.Height);
-            this.btnResetDefaults.Click += (o, e) => { setDefaults(); };
+            this.btnResetDefaults.Click += (o, e) => { this.setDefaults(); };
             this.btnOk = new Btn("Ok", this);
             this.btnOk.Click += (o, e) => { this.save(); };
             this.btnCancel = new Btn("Cancel", this);
-            this.btnCancel.Click += (o, e) => { closeControl(); };
+            this.btnCancel.Click += (o, e) => { this.closeControl(); };
 
             // Load the settings
             this.VisibleChanged += (o, e) => { if (this.Visible) this.load(); };
@@ -60,7 +60,10 @@ namespace PasswordManager
 
         void closeControl() {
             // Display the Password list control
-            this.ShowUserControl(0);
+            if (this.GoToControl != -1)
+                this.ShowUserControl(this.GoToControl);
+            else
+                this.ShowUserControl(0);
         }
     }
 }
