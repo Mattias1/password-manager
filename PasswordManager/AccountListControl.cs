@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace PasswordManager
 {
-    class PasswordListControl : MattyUserControl
+    class AccountListControl : MattyUserControl
     {
-        PasswordControl accountControl;
+        AccountControl accountControl;
         List<Account> accounts;
         Tb tbFilter;
         Lb lbAccounts;
         Btn btnCreate, btnView, btnSettings;
 
-        public PasswordListControl(PasswordControl accountControl) {
+        public AccountListControl(AccountControl accountControl) {
             // Some variables
             this.accounts = new List<Account>();
             this.accountControl = accountControl;

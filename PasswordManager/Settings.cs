@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
 using System.Collections.Generic;
 
 namespace PasswordManager
@@ -216,8 +216,13 @@ namespace PasswordManager
         }
 
         public Point Size {
-            get { return this.get("position", Point.Empty); }
-            set { this.set("position", value); }
+            get { return this.get("size", Point.Empty); }
+            set { this.set("size", value); }
+        }
+
+        public string FileLocation {
+            get { return this.get("file", Application.StartupPath); }
+            set { this.set("file", value); }
         }
     }
 }

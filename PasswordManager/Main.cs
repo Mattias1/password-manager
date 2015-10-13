@@ -6,7 +6,7 @@ namespace PasswordManager
 {
     class Main : Form
     {
-        private static Size MinSize = new Size(290, 200);
+        private static Size MinSize = new Size(290, 240);
 
         MattyUserControl[] userControls;
         public int GoToControl;
@@ -24,8 +24,8 @@ namespace PasswordManager
             this.MaximizeBox = false;
 
             // Add the controls
-            PasswordControl accountControl = new PasswordControl();
-            this.userControls = new MattyUserControl[] { new PasswordListControl(accountControl), accountControl, new SettingsControl() };
+            AccountControl accountControl = new AccountControl();
+            this.userControls = new MattyUserControl[] { new AccountListControl(accountControl), accountControl, new SettingsControl() };
             foreach (MattyUserControl u in this.userControls) {
                 u.Size = this.ClientSize;
                 this.Controls.Add(u);

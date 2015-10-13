@@ -6,20 +6,24 @@ namespace PasswordManager
 {
     class SettingsControl : MattyUserControl
     {
-        Btn btnOk, btnCancel, btnResetDefaults;
+        Tb tbFileLocation;
+        Btn btnOk, btnCancel, btnResetDefaults, btnBrowseFileLocation;
 
         public SettingsControl() {
             // Some basic settings
             this.Hide();
 
             // Add settings
+            this.tbFileLocation = new Tb(this);
+            this.btnBrowseFileLocation = new Btn("Browse", this);
+            this.btnBrowseFileLocation.Click += this.browseFileLocation;
 
             // Add buttons
             this.btnResetDefaults = new Btn("Reset defaults", this);
             this.btnResetDefaults.Size = new Size(this.btnResetDefaults.Width + 25, this.btnResetDefaults.Height);
             this.btnResetDefaults.Click += (o, e) => { this.setDefaults(); };
             this.btnOk = new Btn("Ok", this);
-            this.btnOk.Click += (o, e) => { this.save(); };
+            this.btnOk.Click += (o, e) => { this.save(true); };
             this.btnCancel = new Btn("Cancel", this);
             this.btnCancel.Click += (o, e) => { this.closeControl(); };
 
@@ -29,6 +33,10 @@ namespace PasswordManager
 
         public override void OnResize() {
             // Change settings locations
+            this.tbFileLocation.LocateInside(this);
+            this.tbFileLocation.AddLabel("File location:");
+            this.tbFileLocation.Size = new Size(this.Width - this.btnBrowseFileLocation.Width - this.tbFileLocation.Location.X - 20, this.tbFileLocation.Height);
+            this.btnBrowseFileLocation.LocateFrom(this.tbFileLocation, Btn.Horizontal.Right);
 
             // Change button locations
             this.btnResetDefaults.LocateInside(this, Btn.Horizontal.Left, Btn.Vertical.Bottom);
@@ -39,7 +47,7 @@ namespace PasswordManager
         void load() {
             // Load from the settings
             Settings s = Settings.Get;
-            // Todo
+            this.tbFileLocation.Text = s.FileLocation;
         }
 
         void setDefaults() {
@@ -49,13 +57,14 @@ namespace PasswordManager
             }
         }
 
-        void save() {
+        void save(bool close = false) {
             // Save to the settings
             Settings s = Settings.Get;
-            // Todo
+            s.FileLocation = this.tbFileLocation.Text;
 
             // Display the main Control
-            closeControl();
+            if (close)
+                closeControl();
         }
 
         void closeControl() {
@@ -64,6 +73,18 @@ namespace PasswordManager
                 this.ShowUserControl(this.GoToControl);
             else
                 this.ShowUserControl(0);
+        }
+
+        void browseFileLocation(object o, EventArgs e) {
+            // Get the file json file location with a shiny dialog
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Title = "The account details file";
+            dialog.Filter = "JSON files|*.json";
+            dialog.InitialDirectory = Settings.Get.FileLocation;
+            dialog.FileName = "passwordmanager.json";
+            if (dialog.ShowDialog() == DialogResult.OK) {
+                this.tbFileLocation.Text = dialog.FileName;
+            }
         }
     }
 }
