@@ -46,7 +46,7 @@ namespace PasswordManager
 
                 // Add field tb labels and adjust their sizes
                 for (int i = 0; i < this.account.Fields.Count; i++) {
-                    this.fieldTbs[i].AddLabel(this.account.Fields[i].Id + ":");
+                    this.fieldTbs[i].AddLabel(this.account.Fields[i].Name + ":");
                     this.fieldTbs[i].Label.Size = new Size(this.fieldTbs[i].Label.Width + 9, this.fieldTbs[i].Label.Height);
                     this.fieldTbs[i].Size = new Size(this.Width - this.fieldTbs[i].Location.X - 10, this.fieldTbs[i].Height);
                 }
@@ -80,17 +80,10 @@ namespace PasswordManager
         }
 
         private bool addField() {
-            // Check if field name is valid
-            string id = this.tbAddField.Text;
-            if (id == "")
+            // Add the field
+            Field field = this.account.AddField(this.tbAddField.Text);
+            if (field == null)
                 return false;
-            foreach (Field f in this.account.Fields)
-                if (f.Id.ToLower() == id.ToLower())
-                    return false;
-
-            // Add a new field
-            Field field = new Field(id);
-            this.account.Fields.Add(field);
             this.addFieldTb(field);
 
             // Position the new buttons, reposition the add field button itself, and, for good measure, also reposition everything else
