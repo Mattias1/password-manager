@@ -1,17 +1,19 @@
 ﻿using System;
+using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace PasswordManager
 {
     class Main : Form
     {
-        private static Size MinSize = new Size(290, 240);
+        private static Size MinSize = new Size(370, 240);
 
         MattyUserControl[] userControls;
         public int GoToControl;
 
-        public Main() {
+        public Main(List<Account> accounts) {
             // Load and apply the settings
             Settings s = Settings.Get;
             this.StartPosition = FormStartPosition.Manual;
@@ -25,7 +27,7 @@ namespace PasswordManager
 
             // Add the controls
             AccountControl accountControl = new AccountControl();
-            this.userControls = new MattyUserControl[] { new AccountListControl(accountControl), accountControl, new SettingsControl() };
+            this.userControls = new MattyUserControl[] { new AccountListControl(accountControl, accounts), accountControl, new SettingsControl() };
             foreach (MattyUserControl u in this.userControls) {
                 u.Size = this.ClientSize;
                 this.Controls.Add(u);
@@ -65,13 +67,31 @@ namespace PasswordManager
             this.userControls[i].Size = this.ClientSize;
             this.userControls[i].OnResize();
         }
+
+        public bool Save() {
+            string json = ((AccountListControl)this.userControls[0]).ToJsonString();
+            bool noError = false;
+            try {
+                using (StreamWriter file = new StreamWriter(Settings.Get.FileLocation)) {
+                    file.WriteLine(json);
+                    noError = true;
+                }
+            }
+            catch {
+                return false;
+            }
+            return noError;
+        }
     }
 
     class MattyUserControl : UserControl
     {
         public int GoToControl {
-            get { return ((Main)this.Parent).GoToControl; }
-            set { ((Main)this.Parent).GoToControl = value; }
+            get { return this.Main.GoToControl; }
+            set { this.Main.GoToControl = value; }
+        }
+        public Main Main {
+            get { return (Main)this.Parent; }
         }
 
         /// <summary>
@@ -80,7 +100,7 @@ namespace PasswordManager
         /// <param name="i">The index</param>
         public void ShowUserControl(int i) {
             this.GoToControl = -1;
-            ((Main)this.Parent).ShowUserControl(i);
+            this.Main.ShowUserControl(i);
         }
 
         /// <summary>

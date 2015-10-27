@@ -137,8 +137,6 @@ namespace PasswordManager
                 }
             }
             catch {
-                //MessageScreen.Show("(!) The inifile was incorrectly modified." + System.Environment.NewLine + "The highscores will be resetted.", Color.Black, 0, 2);
-                //this.ResetHighscores();
                 return false;
             }
 

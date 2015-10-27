@@ -23,7 +23,7 @@ namespace PasswordManager
 
             // Add the standard buttons
             this.btnSave = new Btn("Save", this);
-            this.btnSave.Click += (o, e) => { };
+            this.btnSave.Click += (o, e) => { this.save(); };
             this.btnBack = new Btn("Back", this);
             this.btnBack.Click += (o, e) => { this.ShowUserControl(0); };
             this.btnSettings = new Btn("Settings", this);
@@ -31,6 +31,14 @@ namespace PasswordManager
                 this.ShowUserControl(2);
                 this.GoToControl = 1;
             };
+        }
+
+        private bool save() {
+            // Set the values of the account fields
+            for (int i = 0; i < this.account.Fields.Count; i++)
+                this.account.Fields[i].Value = this.fieldTbs[i].Text;
+            // Save to file
+            return this.Main.Save();
         }
 
         public override void OnResize() {
@@ -46,9 +54,14 @@ namespace PasswordManager
 
                 // Add field tb labels and adjust their sizes
                 for (int i = 0; i < this.account.Fields.Count; i++) {
-                    this.fieldTbs[i].AddLabel(this.account.Fields[i].Name + ":");
-                    this.fieldTbs[i].Label.Size = new Size(this.fieldTbs[i].Label.Width + 9, this.fieldTbs[i].Label.Height);
-                    this.fieldTbs[i].Size = new Size(this.Width - this.fieldTbs[i].Location.X - 10, this.fieldTbs[i].Height);
+                    Tb tb = this.fieldTbs[i];
+                    tb.AddLabel(this.account.Fields[i].Name + ":");
+                    tb.Label.Size = new Size(tb.Label.Width + 9, tb.Label.Height);
+                    tb.Size = new Size(this.Width - tb.Location.X - 10, tb.Height);
+                    tb.SelectionStart = 0;
+                    tb.SelectionLength = 0;
+                    tb.ScrollToCaret();
+                    tb.SelectionLength = tb.TextLength;
                 }
             }
             else {
@@ -77,6 +90,8 @@ namespace PasswordManager
             // View the control
             this.ShowUserControl(1);
             this.OnResize();
+            this.fieldTbs[0].SelectAll();
+            this.fieldTbs[0].Focus();
         }
 
         private bool addField() {
@@ -92,9 +107,11 @@ namespace PasswordManager
         }
 
         private void addFieldTb(Field field) {
+            // Adds a field textbox based on a field of the account
             Tb tb = new Tb(this);
             tb.Text = field.Value;
             this.fieldTbs.Add(tb);
+            tb.Focus();
         }
     }
 }

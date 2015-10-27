@@ -63,6 +63,7 @@ namespace PasswordManager
             s.FileLocation = this.tbFileLocation.Text;
 
             // Display the main Control
+            s.Save();
             if (close)
                 closeControl();
         }
@@ -77,7 +78,7 @@ namespace PasswordManager
 
         void browseFileLocation(object o, EventArgs e) {
             // Get the file json file location with a shiny dialog
-            OpenFileDialog dialog = new OpenFileDialog();
+            SaveFileDialog dialog = new SaveFileDialog();
             dialog.Title = "The account details file";
             dialog.Filter = "JSON files|*.json";
             dialog.InitialDirectory = Settings.Get.FileLocation;

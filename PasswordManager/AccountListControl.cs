@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace PasswordManager
 {
@@ -11,12 +12,13 @@ namespace PasswordManager
         List<Account> accounts;
         Tb tbFilter;
         Lb lbAccounts;
-        Btn btnCreate, btnView, btnSettings;
+        Btn btnCreate, btnView, btnDelete, btnSettings;
 
-        public AccountListControl(AccountControl accountControl) {
+        public AccountListControl(AccountControl accountControl, List<Account> accounts) {
             // Some variables
-            this.accounts = new List<Account>();
+            this.accounts = accounts;
             this.accountControl = accountControl;
+            this.VisibleChanged += (o, e) => { if (this.Visible) this.fillAccounts(); };
 
             // The controls
             this.tbFilter = new Tb(this);
@@ -27,6 +29,8 @@ namespace PasswordManager
             this.btnCreate.Click += (o, e) => { this.CreateAccount(); };
             this.btnView = new Btn("View", this);
             this.btnView.Click += (o, e) => { this.ViewAccount(); };
+            this.btnDelete = new Btn("Delete", this);
+            this.btnDelete.Click += (o, e) => { this.DeleteAccount(); };
             this.btnSettings = new Btn("Settings", this);
             this.btnSettings.Click += (o, e) => { this.ShowUserControl(2); };
         }
@@ -39,6 +43,7 @@ namespace PasswordManager
             // Locate the standard buttons
             this.btnCreate.LocateInside(this, Btn.Horizontal.Left, Btn.Vertical.Bottom);
             this.btnView.LocateFrom(this.btnCreate, Btn.Horizontal.Right, Btn.Vertical.CopyBottom);
+            this.btnDelete.LocateFrom(this.btnView, Btn.Horizontal.Right, Btn.Vertical.CopyBottom);
             this.btnSettings.LocateInside(this, Btn.Horizontal.Right, Btn.Vertical.Bottom);
 
             // Add labels
@@ -52,17 +57,52 @@ namespace PasswordManager
             this.lbAccounts.Size = new Size(this.tbFilter.Width, this.btnCreate.Location.Y - this.lbAccounts.Location.Y - 10);
         }
 
-        public void ViewAccount() {
-            // Load the selected account
+        private void fillAccounts() {
+            // Empty the list
+            this.lbAccounts.Items.Clear();
+            // Add all accounts
+            for (int i = 0; i < this.accounts.Count; i++)
+                this.lbAccounts.Items.Add(this.accounts[i].DisplayName);
+        }
+
+        private int getSelected() {
+            // Find the index of the selected account
             int idx = this.lbAccounts.SelectedIndex;
             if (idx == -1 || idx >= this.accounts.Count)
-                return;
-            this.accountControl.View(this.accounts[idx]);
+                return -1;
+            return idx;
+        }
+
+        public void ViewAccount() {
+            // View the selected account
+            int idx = this.getSelected();
+            if (idx >= 0)
+                this.accountControl.View(this.accounts[idx]);
+        }
+
+        public void DeleteAccount() {
+            // Delete the selected account
+            int idx = this.getSelected();
+            if (idx >= 0) {
+                var result = MessageBox.Show("Are you sure you want to delete this account?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.Yes) {
+                    this.accounts.RemoveAt(idx);
+                    this.fillAccounts();
+                    this.Main.Save();
+                }
+            }
         }
 
         public void CreateAccount() {
             // Create a new account
-            this.accountControl.View(new Account());
+            Account account = new Account();
+            account.Initialize();
+            this.accounts.Add(account);
+            this.accountControl.View(account);
+        }
+
+        public string ToJsonString() {
+            return JsonConvert.SerializeObject(this.accounts);
         }
     }
 }
