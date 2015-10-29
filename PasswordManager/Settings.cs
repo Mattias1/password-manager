@@ -13,7 +13,7 @@ namespace PasswordManager
 
         #region Settings internals
 
-        private const string path = "settings.ini";
+        private static readonly string path = Application.StartupPath + Path.DirectorySeparatorChar + "MassRename.ini";
 
         // Singleton code
         /// <summary>
