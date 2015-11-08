@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
@@ -78,6 +78,7 @@ namespace PasswordManager
                 }
             }
             catch {
+                MessageBox.Show("Error saving the file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return noError;
