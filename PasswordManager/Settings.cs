@@ -222,5 +222,10 @@ namespace PasswordManager
             get { return this.get("file", Application.StartupPath); }
             set { this.set("file", value); }
         }
+
+        public string DefaultEmail {
+            get { return this.get("defaultemail", ""); }
+            set { this.set("defaultemail", value); }
+        }
     }
 }

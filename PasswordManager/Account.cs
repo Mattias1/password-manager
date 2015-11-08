@@ -67,7 +67,13 @@ namespace PasswordManager
             get { return new Field("Name"); }
         }
         public static Field Email {
-            get { return new Field("Email"); }
+            get { return new Field("Email", Settings.Get.DefaultEmail); }
+        }
+        public static Field Counter {
+            get { return new Field("Counter", "0"); }
+        }
+        public static Field Type {
+            get { return new Field("Type"); }
         }
     }
 }

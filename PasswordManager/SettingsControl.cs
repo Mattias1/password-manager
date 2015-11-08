@@ -6,7 +6,7 @@ namespace PasswordManager
 {
     class SettingsControl : MattyUserControl
     {
-        Tb tbFileLocation;
+        Tb tbFileLocation, tbDefaultEmail;
         Btn btnOk, btnCancel, btnResetDefaults, btnBrowseFileLocation;
 
         public SettingsControl() {
@@ -17,6 +17,7 @@ namespace PasswordManager
             this.tbFileLocation = new Tb(this);
             this.btnBrowseFileLocation = new Btn("Browse", this);
             this.btnBrowseFileLocation.Click += this.browseFileLocation;
+            this.tbDefaultEmail = new Tb(this);
 
             // Add buttons
             this.btnResetDefaults = new Btn("Reset defaults", this);
@@ -34,8 +35,11 @@ namespace PasswordManager
         public override void OnResize() {
             // Change settings locations
             this.tbFileLocation.LocateInside(this);
+            this.tbDefaultEmail.LocateFrom(this.tbFileLocation, Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
             this.tbFileLocation.AddLabel("File location:");
+            this.tbDefaultEmail.AddLabel("Default email:");
             this.tbFileLocation.Size = new Size(this.Width - this.btnBrowseFileLocation.Width - this.tbFileLocation.Location.X - 20, this.tbFileLocation.Height);
+            this.tbDefaultEmail.Size = new Size(this.Width - this.tbDefaultEmail.Location.X - 10, this.tbDefaultEmail.Height);
             this.btnBrowseFileLocation.LocateFrom(this.tbFileLocation, Btn.Horizontal.Right);
 
             // Change button locations
@@ -48,6 +52,7 @@ namespace PasswordManager
             // Load from the settings
             Settings s = Settings.Get;
             this.tbFileLocation.Text = s.FileLocation;
+            this.tbDefaultEmail.Text = s.DefaultEmail;
         }
 
         void setDefaults() {
@@ -61,6 +66,7 @@ namespace PasswordManager
             // Save to the settings
             Settings s = Settings.Get;
             s.FileLocation = this.tbFileLocation.Text;
+            s.DefaultEmail = this.tbDefaultEmail.Text;
 
             // Display the main Control
             s.Save();
