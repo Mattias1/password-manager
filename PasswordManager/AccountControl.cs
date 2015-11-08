@@ -38,7 +38,10 @@ namespace PasswordManager
             for (int i = 0; i < this.account.Fields.Count; i++)
                 this.account.Fields[i].Value = this.fieldTbs[i].Text;
             // Save to file
-            return this.Main.Save();
+            bool success = this.Main.Save();
+            if (success)
+                MessageBox.Show("Changes saved successfully.", "Success");
+            return success;
         }
 
         public override void OnResize() {
