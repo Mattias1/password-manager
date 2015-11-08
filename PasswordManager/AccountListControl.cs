@@ -23,6 +23,7 @@ namespace PasswordManager
             // The controls
             this.tbFilter = new Tb(this);
             this.lbAccounts = new Lb(this);
+            this.lbAccounts.MouseDoubleClick += (o, e) => { this.ViewAccount(); };
 
             // Add standard buttons
             this.btnCreate = new Btn("Create new", this);
