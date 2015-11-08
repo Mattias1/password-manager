@@ -8,7 +8,7 @@ namespace PasswordManager
 {
     class Main : Form
     {
-        private static Size MinSize = new Size(370, 240);
+        private static Size MinSize = new Size(450, 290);
 
         MattyUserControl[] userControls;
         public int GoToControl;

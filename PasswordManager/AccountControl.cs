@@ -7,14 +7,14 @@ namespace PasswordManager
 {
     class AccountControl : MattyUserControl
     {
-        List<Tb> fieldTbs;
+        List<Control> fieldTbs;
         Tb tbAddField;
         Account account;
         Btn btnSettings, btnSave, btnBack, btnAdd;
 
         public AccountControl() {
             // Init the fieldTbs. It's being filled later.
-            this.fieldTbs = new List<Tb>();
+            this.fieldTbs = new List<Control>();
 
             // The button to add a new field
             this.tbAddField = new Tb(this);
@@ -33,6 +33,16 @@ namespace PasswordManager
             };
         }
 
+        private bool isTb(int index) {
+            return this.account.Fields[index].AllowedValues == null;
+        }
+        private Tb getFieldTb(int index) {
+            return (Tb)fieldTbs[index];
+        }
+        private Db getFieldDb(int index) {
+            return (Db)fieldTbs[index];
+        }
+
         private bool save() {
             // Set the values of the account fields
             for (int i = 0; i < this.account.Fields.Count; i++)
@@ -47,9 +57,16 @@ namespace PasswordManager
         public override void OnResize() {
             if (this.fieldTbs.Count > 0) {
                 // Locate the fields and add the label
-                this.fieldTbs[0].LocateInside(this);
-                for (int i = 1; i < this.account.Fields.Count; i++)
-                    this.fieldTbs[i].LocateFrom(this.fieldTbs[i - 1], Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
+                if (isTb(0))
+                    this.getFieldTb(0).LocateInside(this);
+                else
+                    this.getFieldDb(0).LocateInside(this);
+                for (int i = 1; i < this.account.Fields.Count; i++) {
+                    if (isTb(i))
+                        this.getFieldTb(i).LocateFrom(this.fieldTbs[i - 1], Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
+                    else
+                        this.getFieldDb(i).LocateFrom(this.fieldTbs[i - 1], Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
+                }
 
                 // Position the add field button
                 this.tbAddField.LocateFrom(this.fieldTbs[this.fieldTbs.Count - 1], Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
@@ -57,14 +74,22 @@ namespace PasswordManager
 
                 // Add field tb labels and adjust their sizes
                 for (int i = 0; i < this.account.Fields.Count; i++) {
-                    Tb tb = this.fieldTbs[i];
-                    tb.AddLabel(this.account.Fields[i].Name + ":");
-                    tb.Label.Size = new Size(tb.Label.Width + 9, tb.Label.Height);
-                    tb.Size = new Size(this.Width - tb.Location.X - 10, tb.Height);
-                    tb.SelectionStart = 0;
-                    tb.SelectionLength = 0;
-                    tb.ScrollToCaret();
-                    tb.SelectionLength = tb.TextLength;
+                    if (isTb(i)) {
+                        Tb tb = this.getFieldTb(i);
+                        tb.AddLabel(this.account.Fields[i].Name + ":");
+                        tb.Label.Size = new Size(tb.Label.Width + 9, tb.Label.Height);
+                        tb.Size = new Size(this.Width - tb.Location.X - 10, tb.Height);
+                        tb.SelectionStart = 0;
+                        tb.SelectionLength = 0;
+                        tb.ScrollToCaret();
+                        tb.SelectionLength = tb.TextLength;
+                    }
+                    else {
+                        Db db = this.getFieldDb(i);
+                        db.AddLabel(this.account.Fields[i].Name + ":");
+                        db.Label.Size = new Size(db.Label.Width + 9, db.Label.Height);
+                        db.Size = new Size(this.Width - db.Location.X - 10, db.Height);
+                    }
                 }
             }
             else {
@@ -93,7 +118,8 @@ namespace PasswordManager
             // View the control
             this.ShowUserControl(1);
             this.OnResize();
-            this.fieldTbs[0].SelectAll();
+            if (isTb(0))
+                this.getFieldTb(0).SelectAll();
             this.fieldTbs[0].Focus();
         }
 
@@ -111,10 +137,20 @@ namespace PasswordManager
 
         private void addFieldTb(Field field) {
             // Adds a field textbox based on a field of the account
-            Tb tb = new Tb(this);
-            tb.Text = field.Value;
-            this.fieldTbs.Add(tb);
-            tb.Focus();
+            if (field.AllowedValues == null) {
+                Tb tb = new Tb(this);
+                tb.Text = field.Value;
+                this.fieldTbs.Add(tb);
+                tb.Focus();
+            }
+            else {
+                Db db = new Db(this);
+                foreach (string item in field.AllowedValues)
+                    db.Items.Add(item);
+                db.Text = field.Value;
+                this.fieldTbs.Add(db);
+                db.Focus();
+            }
         }
     }
 }

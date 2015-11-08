@@ -25,7 +25,7 @@ namespace PasswordManager
             if (this.Fields != null)
                 return false;
             // Add the default fields
-            this.Fields = new List<Field> { Field.DisplayName, Field.Identifier, Field.Username, Field.Email };
+            this.Fields = new List<Field> { Field.DisplayName, Field.Identifier, Field.Username, Field.Email, Field.Counter, Field.Type };
             return true;
         }
 
@@ -50,10 +50,13 @@ namespace PasswordManager
         public string Name;
         [JsonProperty("value")]
         public string Value;
+        [JsonProperty("options")]
+        public string[] AllowedValues;
 
-        public Field(string name = "", string value = "") {
+        public Field(string name = "", string value = "", string[] allowedValues = null) {
             this.Name = name;
             this.Value = value;
+            this.AllowedValues = allowedValues;
         }
 
         // Some fields that will come in handy
@@ -73,7 +76,11 @@ namespace PasswordManager
             get { return new Field("Counter", "0"); }
         }
         public static Field Type {
-            get { return new Field("Type"); }
+            get {
+                return new Field("Type", "Maximum Security Password", new string[] {
+                    "Maximum Security Password", "Long Password", "Medium Password", "Short Password", "Basic Password", "PIN" 
+                });
+            }
         }
     }
 }
