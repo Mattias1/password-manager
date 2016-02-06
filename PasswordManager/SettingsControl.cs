@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using MattyControls;
 
 namespace PasswordManager
 {
@@ -35,17 +36,17 @@ namespace PasswordManager
         public override void OnResize() {
             // Change settings locations
             this.tbFileLocation.LocateInside(this);
-            this.tbDefaultEmail.LocateFrom(this.tbFileLocation, Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
+            this.tbDefaultEmail.LocateFrom(this.tbFileLocation, MattyControl.Horizontal.CopyLeft, MattyControl.Vertical.Bottom);
             this.tbFileLocation.AddLabel("File location:");
             this.tbDefaultEmail.AddLabel("Default email:");
             this.tbFileLocation.Size = new Size(this.Width - this.btnBrowseFileLocation.Width - this.tbFileLocation.Location.X - 20, this.tbFileLocation.Height);
             this.tbDefaultEmail.Size = new Size(this.Width - this.tbDefaultEmail.Location.X - 10, this.tbDefaultEmail.Height);
-            this.btnBrowseFileLocation.LocateFrom(this.tbFileLocation, Btn.Horizontal.Right);
+            this.btnBrowseFileLocation.LocateFrom(this.tbFileLocation, MattyControl.Horizontal.Right);
 
             // Change button locations
-            this.btnResetDefaults.LocateInside(this, Btn.Horizontal.Left, Btn.Vertical.Bottom);
-            this.btnCancel.LocateInside(this, Btn.Horizontal.Right, Btn.Vertical.Bottom);
-            this.btnOk.LocateFrom(this.btnCancel, Btn.Horizontal.Left, Btn.Vertical.CopyBottom);
+            this.btnResetDefaults.LocateInside(this, MattyControl.Horizontal.Left, MattyControl.Vertical.Bottom);
+            this.btnCancel.LocateInside(this, MattyControl.Horizontal.Right, MattyControl.Vertical.Bottom);
+            this.btnOk.LocateFrom(this.btnCancel, MattyControl.Horizontal.Left, MattyControl.Vertical.CopyBottom);
         }
 
         void load() {
@@ -75,11 +76,7 @@ namespace PasswordManager
         }
 
         void closeControl() {
-            // Display the Password list control
-            if (this.GoToControl != -1)
-                this.ShowUserControl(this.GoToControl);
-            else
-                this.ShowUserControl(0);
+            this.ShowLastVisitedUserControl();
         }
 
         void browseFileLocation(object o, EventArgs e) {

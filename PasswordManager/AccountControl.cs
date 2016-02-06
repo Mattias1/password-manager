@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Collections.Generic;
+using MattyControls;
 
 namespace PasswordManager
 {
@@ -25,12 +26,9 @@ namespace PasswordManager
             this.btnSave = new Btn("Save", this);
             this.btnSave.Click += (o, e) => { this.save(); };
             this.btnBack = new Btn("Back", this);
-            this.btnBack.Click += (o, e) => { this.ShowUserControl(0); };
+            this.btnBack.Click += (o, e) => { this.ShowUserControl<AccountListControl>(); };
             this.btnSettings = new Btn("Settings", this);
-            this.btnSettings.Click += (o, e) => {
-                this.ShowUserControl(2);
-                this.GoToControl = 1;
-            };
+            this.btnSettings.Click += (o, e) => { this.ShowUserControl<SettingsControl>(); };
         }
 
         private bool isTb(int index) {
@@ -48,7 +46,7 @@ namespace PasswordManager
             for (int i = 0; i < this.account.Fields.Count; i++)
                 this.account.Fields[i].Value = this.fieldTbs[i].Text;
             // Save to file
-            bool success = this.Main.Save();
+            bool success = ((Main)this.Parent).Save();
             if (success)
                 MessageBox.Show("Changes saved successfully.", "Success");
             return success;
@@ -63,14 +61,14 @@ namespace PasswordManager
                     this.getFieldDb(0).LocateInside(this);
                 for (int i = 1; i < this.account.Fields.Count; i++) {
                     if (isTb(i))
-                        this.getFieldTb(i).LocateFrom(this.fieldTbs[i - 1], Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
+                        this.getFieldTb(i).LocateFrom(this.fieldTbs[i - 1], MattyControl.Horizontal.CopyLeft, MattyControl.Vertical.Bottom);
                     else
-                        this.getFieldDb(i).LocateFrom(this.fieldTbs[i - 1], Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
+                        this.getFieldDb(i).LocateFrom(this.fieldTbs[i - 1], MattyControl.Horizontal.CopyLeft, MattyControl.Vertical.Bottom);
                 }
 
                 // Position the add field button
-                this.tbAddField.LocateFrom(this.fieldTbs[this.fieldTbs.Count - 1], Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
-                this.btnAdd.LocateFrom(this.tbAddField, Btn.Horizontal.Right);
+                this.tbAddField.LocateFrom(this.fieldTbs[this.fieldTbs.Count - 1], MattyControl.Horizontal.CopyLeft, MattyControl.Vertical.Bottom);
+                this.btnAdd.LocateFrom(this.tbAddField, MattyControl.Horizontal.Right);
 
                 // Add field tb labels and adjust their sizes
                 for (int i = 0; i < this.account.Fields.Count; i++) {
@@ -78,7 +76,7 @@ namespace PasswordManager
                         Tb tb = this.getFieldTb(i);
                         tb.AddLabel(this.account.Fields[i].Name + ":");
                         tb.Label.Size = new Size(tb.Label.Width + 9, tb.Label.Height);
-                        tb.Size = new Size(this.Width - tb.Location.X - 10, tb.Height);
+                        tb.Size = new Size(this.Width - tb.Location.X - MattyControl.Distance, tb.Height);
                         tb.SelectionStart = 0;
                         tb.SelectionLength = 0;
                         tb.ScrollToCaret();
@@ -88,7 +86,7 @@ namespace PasswordManager
                         Db db = this.getFieldDb(i);
                         db.AddLabel(this.account.Fields[i].Name + ":");
                         db.Label.Size = new Size(db.Label.Width + 9, db.Label.Height);
-                        db.Size = new Size(this.Width - db.Location.X - 10, db.Height);
+                        db.Size = new Size(this.Width - db.Location.X - MattyControl.Distance, db.Height);
                     }
                 }
             }
@@ -98,9 +96,9 @@ namespace PasswordManager
             }
 
             // Change standard button locations
-            this.btnSave.LocateInside(this, Btn.Horizontal.Left, Btn.Vertical.Bottom);
-            this.btnBack.LocateFrom(this.btnSave, Btn.Horizontal.Right, Btn.Vertical.CopyBottom);
-            this.btnSettings.LocateInside(this, Btn.Horizontal.Right, Btn.Vertical.Bottom);
+            this.btnSave.LocateInside(this, MattyControl.Horizontal.Left, MattyControl.Vertical.Bottom);
+            this.btnBack.LocateFrom(this.btnSave, MattyControl.Horizontal.Right, MattyControl.Vertical.CopyBottom);
+            this.btnSettings.LocateInside(this, MattyControl.Horizontal.Right, MattyControl.Vertical.Bottom);
         }
 
         public void View(Account account) {
@@ -116,7 +114,7 @@ namespace PasswordManager
                 this.addFieldTb(this.account.Fields[i]);
 
             // View the control
-            this.ShowUserControl(1);
+            this.ShowUserControl<AccountControl>();
             this.OnResize();
             if (isTb(0))
                 this.getFieldTb(0).SelectAll();

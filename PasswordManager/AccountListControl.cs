@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Collections.Generic;
 using Newtonsoft.Json;
+using MattyControls;
 
 namespace PasswordManager
 {
@@ -33,29 +34,29 @@ namespace PasswordManager
             this.btnDelete = new Btn("Delete", this);
             this.btnDelete.Click += (o, e) => { this.DeleteAccount(); };
             this.btnSettings = new Btn("Settings", this);
-            this.btnSettings.Click += (o, e) => { this.ShowUserControl(2); };
+            this.btnSettings.Click += (o, e) => { this.ShowUserControl<SettingsControl>(); };
         }
 
         public override void OnResize() {
             // The locations of the normal controls
             this.tbFilter.LocateInside(this);
-            this.lbAccounts.LocateFrom(this.tbFilter, Btn.Horizontal.CopyLeft, Btn.Vertical.Bottom);
+            this.lbAccounts.LocateFrom(this.tbFilter, MattyControl.Horizontal.CopyLeft, MattyControl.Vertical.Bottom);
 
             // Locate the standard buttons
-            this.btnCreate.LocateInside(this, Btn.Horizontal.Left, Btn.Vertical.Bottom);
-            this.btnView.LocateFrom(this.btnCreate, Btn.Horizontal.Right, Btn.Vertical.CopyBottom);
-            this.btnDelete.LocateFrom(this.btnView, Btn.Horizontal.Right, Btn.Vertical.CopyBottom);
-            this.btnSettings.LocateInside(this, Btn.Horizontal.Right, Btn.Vertical.Bottom);
+            this.btnCreate.LocateInside(this, MattyControl.Horizontal.Left, MattyControl.Vertical.Bottom);
+            this.btnView.LocateFrom(this.btnCreate, MattyControl.Horizontal.Right, MattyControl.Vertical.CopyBottom);
+            this.btnDelete.LocateFrom(this.btnView, MattyControl.Horizontal.Right, MattyControl.Vertical.CopyBottom);
+            this.btnSettings.LocateInside(this, MattyControl.Horizontal.Right, MattyControl.Vertical.Bottom);
 
             // Add labels
             int labelWidth = 60;
-            this.tbFilter.AddLabel("Filter: ", 10, true, labelWidth);
+            this.tbFilter.AddLabel("Filter: ", MattyControl.Distance, true, labelWidth);
             this.lbAccounts.Size = new Size(this.lbAccounts.Width, this.tbFilter.Height); // Temporary set a new height, to position the label correctly :P
-            this.lbAccounts.AddLabel("Accounts: ", 10, true, labelWidth);
+            this.lbAccounts.AddLabel("Accounts: ", MattyControl.Distance, true, labelWidth);
 
             // Change sizes
-            this.tbFilter.Size = new Size(this.Width - 10 - this.tbFilter.Location.X, this.tbFilter.Height);
-            this.lbAccounts.Size = new Size(this.tbFilter.Width, this.btnCreate.Location.Y - this.lbAccounts.Location.Y - 10);
+            this.tbFilter.Size = new Size(this.Width - MattyControl.Distance - this.tbFilter.Location.X, this.tbFilter.Height);
+            this.lbAccounts.Size = new Size(this.tbFilter.Width, this.btnCreate.Location.Y - this.lbAccounts.Location.Y - MattyControl.Distance);
         }
 
         private void fillAccounts() {
@@ -89,7 +90,7 @@ namespace PasswordManager
                 if (result == DialogResult.Yes) {
                     this.accounts.RemoveAt(idx);
                     this.fillAccounts();
-                    this.Main.Save();
+                    ((Main)this.Parent).Save();
                 }
             }
         }
