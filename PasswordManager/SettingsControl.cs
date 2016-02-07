@@ -39,9 +39,9 @@ namespace PasswordManager
             this.tbDefaultEmail.LocateFrom(this.tbFileLocation, MattyControl.Horizontal.CopyLeft, MattyControl.Vertical.Bottom);
             this.tbFileLocation.AddLabel("File location:");
             this.tbDefaultEmail.AddLabel("Default email:");
-            this.tbFileLocation.Size = new Size(this.Width - this.btnBrowseFileLocation.Width - this.tbFileLocation.Location.X - 20, this.tbFileLocation.Height);
-            this.tbDefaultEmail.Size = new Size(this.Width - this.tbDefaultEmail.Location.X - 10, this.tbDefaultEmail.Height);
-            this.btnBrowseFileLocation.LocateFrom(this.tbFileLocation, MattyControl.Horizontal.Right);
+            this.btnBrowseFileLocation.LocateInside(this, MattyControl.Horizontal.Right, MattyControl.Vertical.Top);
+            this.tbFileLocation.StretchRight(this.btnBrowseFileLocation);
+            this.tbDefaultEmail.StretchRight(this);
 
             // Change button locations
             this.btnResetDefaults.LocateInside(this, MattyControl.Horizontal.Left, MattyControl.Vertical.Bottom);

@@ -76,7 +76,7 @@ namespace PasswordManager
                         Tb tb = this.getFieldTb(i);
                         tb.AddLabel(this.account.Fields[i].Name + ":");
                         tb.Label.Size = new Size(tb.Label.Width + 9, tb.Label.Height);
-                        tb.Size = new Size(this.Width - tb.Location.X - MattyControl.Distance, tb.Height);
+                        tb.StretchRight(this);
                         tb.SelectionStart = 0;
                         tb.SelectionLength = 0;
                         tb.ScrollToCaret();
@@ -86,7 +86,7 @@ namespace PasswordManager
                         Db db = this.getFieldDb(i);
                         db.AddLabel(this.account.Fields[i].Name + ":");
                         db.Label.Size = new Size(db.Label.Width + 9, db.Label.Height);
-                        db.Size = new Size(this.Width - db.Location.X - MattyControl.Distance, db.Height);
+                        db.StretchRight(this);
                     }
                 }
             }

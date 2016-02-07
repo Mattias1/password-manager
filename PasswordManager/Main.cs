@@ -9,7 +9,7 @@ namespace PasswordManager
 {
     class Main : MattyForm
     {
-        private static Size MinSize = new Size(450, 290);
+        private static Size MinSize = new Size(450, 295);
 
         public Main(List<Account> accounts)
             : base(MinSize, Settings.Get) {

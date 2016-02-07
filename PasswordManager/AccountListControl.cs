@@ -55,8 +55,9 @@ namespace PasswordManager
             this.lbAccounts.AddLabel("Accounts: ", MattyControl.Distance, true, labelWidth);
 
             // Change sizes
-            this.tbFilter.Size = new Size(this.Width - MattyControl.Distance - this.tbFilter.Location.X, this.tbFilter.Height);
-            this.lbAccounts.Size = new Size(this.tbFilter.Width, this.btnCreate.Location.Y - this.lbAccounts.Location.Y - MattyControl.Distance);
+            this.tbFilter.StretchRight(this);
+            this.lbAccounts.StretchRight(this);
+            this.lbAccounts.StretchDown(this.btnCreate);
         }
 
         private void fillAccounts() {
